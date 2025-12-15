@@ -1,3 +1,12 @@
+// TODO Fileheader fehlt
+// TODO Flussdiagramm fehlt
+// TODO README Inhalt sollte noch schöner formatiert werden
+// Kein Review von einem Kollegen machen lassen?
+// Sehr schöne Umsetzung - haben Sie alles von dem Code verstanden?
+// TODO gibt es eine Möglichkeit auf dei globalen Variablen zu verzichten bzw. manche davon?
+// TODO alle Pins als const int definieren - ergibt keinen Sinn diese als veränderbare Variablen anzulegen
+// Freue mich schon auf die Livedemo!
+
 #include <Arduino.h>
 
 int joyX = A0;
@@ -66,7 +75,6 @@ void setup()
 
 void showDigit(int digit, int value) 
 {
-
   digitalWrite(pinA, numbers[value][0] ? LOW : HIGH);
   digitalWrite(pinB, numbers[value][1] ? LOW : HIGH);
   digitalWrite(pinC, numbers[value][2] ? LOW : HIGH);

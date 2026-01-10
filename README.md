@@ -1,27 +1,47 @@
+Projektziel:
+Anzeige einer Uhrzeit (hh:mm) auf einem 4-stelligen 7-Segment-Display (5461AS, Common Anode)
+Einstellen der Zeit über einen Joystick (HW-504)
+Die Uhr tickt jede Minute automatisch weiter
+Anzeige aller Ziffern über Multiplexing
+Common-Anode-Logik:
+LOW = EIN, HIGH = AUS
 
-Ziel des Projekts 
+Hardware:
+Arduino (Uno / Nano)
+4-stelliges 7-Segment-Display (5461AS)
+Joystick HW-504
+Vorwiderstände
+Steckbrett & Jumper-Kabel
 
-Ein 4-stelliges 7-Segment Display (5461AS Common Anode) betreiben
+Funktionsweise:
+Anzeige von Stunden und Minuten
+Zeit läuft unabhängig vom Einstellen weiter
+Joystick - Links/Rechts → Stunden oder Minuten auswählen
+Hoch/Runter → Wert ändern
+Taster → Einstellmodus
 
-Eine Uhr (hh mm) anzeigen
+Technische Grundlagen:
+Segmentsteuerung
+Common-Anode-Display
+Segmente werden mit LOW eingeschaltet
+Segmentmuster für Ziffern 0–9
 
-Mit einem Joystick (HW-504) Zeit einstellen
+Multiplexing:
+7 gemeinsame Segmentleitungen
+4 separate Anoden
+Ziffern werden schnell nacheinander aktiviert
 
-Die Uhr muss jede Minute weiterticken
+Joystick:
+X- & Y-Achse analog (analogRead())
+Taster digital (digitalRead())
 
-Jede Ziffer wird über Multiplexing angezeigt
+Zeitsteuerung:
+Verwendung von millis() statt delay()
+Jede vergangene Minute erhöht die Uhrzeit
 
-Common-Anode-Logik → LOW = EIN, HIGH = AUS
-
-Damit stehen 3 technische Probleme fest:
-
-Wie schaltet man Segmente korrekt?
-
-Wie zeigt man 4 Stellen mit nur 7 Segment-Leitungen an?
-
-Wie liest man den Joystick ein?
-
-Die folgenden Antworten zu den Fragen kann man sich aus der offizielen Arduino Website raussuchen. 
+Quellen:
+Grundlagen aus der offiziellen Dokumentation von
+Arduino
 
 
 

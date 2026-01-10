@@ -7,49 +7,68 @@
 // TODO alle Pins als const int definieren - ergibt keinen Sinn diese als veränderbare Variablen anzulegen
 // Freue mich schon auf die Livedemo!
 
+/*
+  Projekt:    4-stellige 7-Segment-Uhr mit Joystick
+  Hardware:   Arduino, 5461AS (Common Anode)
+  Eingabe:    Joystick HW-504
+ 
+  Funktion:
+  - Anzeige der Uhrzeit (hh:mm)
+  - Uhr tickt jede Minute weiter
+  - Zeit kann per Joystick eingestellt werden
+  - Multiplex-Ansteuerung der 4 Stellen
+ 
+  David Friedl
+  08.12.2025
+ */
+
 #include <Arduino.h>
 
-int joyX = A0;
-int joyY = A1;
-int joySW = A2;
+/*Pin-Definitionen*/
+// Joystick
+const int joyX  = A0;
+const int joyY  = A1;
+const int joySW = A2;
 
-int xValue = 0;
-int yValue = 0;
+// Segmente
+const int pinA = 2;
+const int pinB = 3;
+const int pinC = 4;
+const int pinD = 5;
+const int pinE = 6;
+const int pinF = 7;
+const int pinG = 8;
 
-int pinA = 2;
-int pinB = 3;
-int pinC = 4;
-int pinD = 5;
-int pinE = 6;
-int pinF = 7;
-int pinG = 8;
+// Digit-Anoden
+const int D1 = 9;
+const int D2 = 10;
+const int D3 = 11;
+const int D4 = 12;
 
-int D1 = 9;
-int D2 = 10;
-int D3 = 11;
-int D4 = 12;
-
+/*Globale Zustandsvariablen*/
+// Diese Variablen müssen global sein, da sie von mehreren
+// Funktionen (Anzeige, Zeitlogik, Joystick) benötigt werden.
 int hours = 12;
 int minutes = 0;
 bool settingMode = false;
 int activeDigit = 0;
 unsigned long lastUpdate = 0;
 
-byte numbers[10][7] = {
-  {0,0,0,0,0,0,1}, // 0
-  {1,0,0,1,1,1,1}, // 1
-  {0,0,1,0,0,1,0}, // 2
-  {0,0,0,0,1,1,0}, // 3
-  {1,0,0,1,1,0,0}, // 4
-  {0,1,0,0,1,0,0}, // 5
-  {0,1,0,0,0,0,0}, // 6
-  {0,0,0,1,1,1,1}, // 7
-  {0,0,0,0,0,0,0}, // 8
-  {0,0,0,0,1,0,0}  // 9
+/*Segment-Muster*/
+const byte numbers[10][7] = {
+  {0,0,0,0,0,0,1}, 
+  {1,0,0,1,1,1,1}, 
+  {0,0,1,0,0,1,0}, 
+  {0,0,0,0,1,1,0}, 
+  {1,0,0,1,1,0,0}, 
+  {0,1,0,0,1,0,0}, 
+  {0,1,0,0,0,0,0}, 
+  {0,0,0,1,1,1,1}, 
+  {0,0,0,0,0,0,0}, 
+  {0,0,0,0,1,0,0}  
 };
 
-void setup() 
-{
+void setup() {
   Serial.begin(9600);
 
   pinMode(joySW, INPUT_PULLUP);
@@ -73,8 +92,7 @@ void setup()
   digitalWrite(D4, HIGH);
 }
 
-void showDigit(int digit, int value) 
-{
+void showDigit(int digit, int value) {
   digitalWrite(pinA, numbers[value][0] ? LOW : HIGH);
   digitalWrite(pinB, numbers[value][1] ? LOW : HIGH);
   digitalWrite(pinC, numbers[value][2] ? LOW : HIGH);
@@ -96,8 +114,7 @@ void showDigit(int digit, int value)
   digitalWrite(D4, HIGH);
 }
 
-void displayTime() 
-{
+void displayTime() {
   int d[4] = {
     hours / 10,
     hours % 10,
@@ -113,8 +130,7 @@ void displayTime()
   }
 }
 
-void updateClock() 
-{
+void updateClock() {
   if (millis() - lastUpdate >= 60000) {
     lastUpdate = millis();
     minutes++;
@@ -123,9 +139,7 @@ void updateClock()
   }
 }
 
-
-void changeDigit(int delta) 
-{
+void changeDigit(int delta) {
   int h = hours;
   int m = minutes;
 
@@ -143,10 +157,9 @@ void changeDigit(int delta)
   minutes = m;
 }
 
-void handleJoystick() 
-{
-  xValue = analogRead(joyX);
-  yValue = analogRead(joyY);
+void handleJoystick() {
+  int xValue = analogRead(joyX);
+  int yValue = analogRead(joyY);
 
   if (yValue < 300) { changeDigit(+1); delay(200); }
   if (yValue > 700) { changeDigit(-1); delay(200); }
@@ -155,9 +168,7 @@ void handleJoystick()
   if (xValue < 300) { activeDigit = (activeDigit + 3) % 4; delay(200); }
 }
 
-void loop() 
-{
-
+void loop() {
   if (digitalRead(joySW) == LOW) {
     delay(200);
     settingMode = !settingMode;
